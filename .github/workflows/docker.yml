@@ -1,0 +1,26 @@
+name: build and push
+# trigger : 언제 시작할지
+on:
+  push:
+    branches: [main]
+# github 컴퓨터를 사용
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_ID}}
+          password: ${{secrets.DOCKERHUB_PW}}
+
+        # context 도커 파일 위치
+      - name: build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{secrets.DOCKERHUB_ID}}/insta-front:latest
